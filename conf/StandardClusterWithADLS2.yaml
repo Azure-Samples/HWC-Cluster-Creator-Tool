@@ -1,0 +1,35 @@
+type: SPARK_AND_LLAP # Optional, values can be either SPARK_ONLY or LLAP_ONLY. Default is SPARK_AND_LLAP
+clusterNamePrefix: Foo # This prefix is used while creating the cluster name,only first 3 chars are used as prefix
+resourceGroup: foobar-rg # Resource group where the cluster needs to be created
+region: eastus2 # Region name where the cluster needs to be created, should be in small case without space
+headNodeVMSize: STANDARD_D13_V2 # Any Standrad VM Size supported for Head Nodes
+workerNodeVMSize: STANDARD_D13_V2 # Any Standrad VM Size supported for Worker Nodes
+workerNodeSize: 3 # Size of worker nodes
+subscription: YOUR_SUBSCRIPTION # Subscription ID
+
+activeDirectory:
+  azureEnv: AZURE # Azure Env either AZURE_CHINA/AZURE_GERMANY/AZURE_US_GOVERNMENT , default AZURE
+  clientId: YOUR_CLIENT_ID # Client ID of the service principal
+  tenantId: YOUR_TENANT_ID # Tenant ID of the service principal
+  clientSecret: YOUR_CLIENT_SECRET # Client Secret for the service principal
+
+clusterCredentials:
+  clusterLoginUsername: YOU_USER_NAME # Ambari username
+  clusterLoginPassword: YOUR_PASSWORD # Ambari passwor
+  sshUsername: SSH_USER # SSH username
+  sshPassword: SSH_PASSWORD # SSH password
+
+storage:
+  type: ADLS_GEN2 # Currently Default is WASB, we can use ADLS_GEN2 as well
+  endpoint: <YOUR_STORAGE_ACCOUNT>.dfs.core.windows.net # Storage account name
+  resourceGroup: <RESOUCE_GROUP> # Resource group where ADLS Gen2 exist
+  managedIdentityName: <IDENTITY_NAME> # Managed Identity Name
+  mangedIdentityResourceGroup: <IDENTITY_RESOURCE_GREOUP> # Resource Group name where the Managed Identity exist
+
+
+network:
+  vnetName: YOUR_VNET # VNet Name to be used
+  resourceGroup: VNET_RESOURCE_GROUP # Resource group in which the VNet exists
+  subnetName: SUBNET_NAME # Subnet name to be used within a VNet 
+  create: false # If true, creates a new one (resourceGroup here is not required)
+                # If false, configures the existing VNet and Subnet from the resourceGroup mentioned

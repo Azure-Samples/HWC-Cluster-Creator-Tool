@@ -1,0 +1,43 @@
+type: SPARK_AND_LLAP
+clusterNamePrefix: 123
+resourceGroup: test-rg
+region: eastus2
+headNodeVMSize: STANDARD_D13_V2
+workerNodeVMSize: STANDARD_D13_V2
+workerNodeSize: 3
+subscription: 00000000-0000-0000-0000-000000000000
+
+activeDirectory:
+  azureEnv: AZURE
+  clientId: 00000000-0000-0000-0000-000000000000
+  tenantId: 00000000-0000-0000-0000-000000000000
+  clientSecret: 00000000-0000-0000-0000-000000000000
+
+clusterCredentials:
+  clusterLoginUsername: admin
+  clusterLoginPassword: Password123!
+  sshUsername: sshuser
+  sshPassword: Password123!
+
+storage:
+  type: WASB
+  endpoint: dummy.blob.core.windows.net
+  key: jladflkjadndsakjfdlkjfdlkjsdf==adfklnasdkfj
+#  endpoint: dummy.dfs.core.windows.net
+#  resourceGroup: test-rg
+#  managedIdentityName: testmsi
+#  mangedIdentityResourceGroup: test-rg
+
+network:
+  vnetName: testvnet
+  resourceGroup: test-rg
+  subnetName: testsubnet
+#  create: false
+
+security:
+  ldapUrl: ldaps://securehadoop.onmicrosoft.com:636
+  domainUserName: admin@securehadoop.onmicrosoft.com
+  aaddsDnsDomainName: securehadoop.onmicrosoft.com
+  clusterAccessGroup: clusterusers
+  aaddsResourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.AAD/domainServices/securehadoop.onmicrosoft.com
+  msiResourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmsi
