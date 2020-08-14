@@ -33,12 +33,12 @@ This tool provides the following features:
 User can set configs in a YAML file (as shown below) and pass it to the tool. The below list covers all the configurations supported by this tool. Additionally, the conf folder in this repo has templates for standard and secure cluster config files
  
 ```yml
-type: SPARK_AND_LLAP # [Optional], values can be either SPARK_ONLY or LLAP_ONLY. Default is SPARK_AND_LLAP
-clusterNamePrefix: Foo # This prefix is used while creating the cluster name. Only first three chars are used as prefix from this string.
+type: SPARK_AND_LLAP # [Optional], values can be either SPARK_ONLY or LLAP_ONLY Default is SPARK_AND_LLAP
+clusterNamePrefix: Foo # This prefix is used while creating the cluster name. Only first three chars are used as prefix from this string
 resourceGroup: foobar-rg # Resource group where the cluster needs to be created
-region: eastus2 # Region name where the cluster needs to be created, should be in smallcase without space 
-headNodeVMSize: STANDARD_D13_V2 # Any Standrad VM Size supported for Head Nodes
-workerNodeVMSize: STANDARD_D13_V2 # Any Standrad VM Size supported for Worker Nodes
+region: eastus2 # Region name where the cluster needs to be created, should be in small case without space
+headNodeVMSize: STANDARD_D13_V2 # Any Standard VM Size supported for Head Nodes in HDInsight, https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-supported-node-configuration
+workerNodeVMSize: STANDARD_D13_V2 # Any Standard VM Size supported for Worker Nodes in HDInsight, https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-supported-node-configuration
 workerNodeSize: 3 # Size of worker nodes
 subscription: YOUR_SUBSCRIPTION # Subscription ID
 
@@ -55,12 +55,12 @@ clusterCredentials:
   sshPassword: SSH_PASSWORD # SSH password
 
 storage:
-  type: WASB # Default is WASB, we can use ADLS_GEN2 as well
-  endpoint: <YOUR_STORAGE_ACCOUNT>.blob.core.windows.net or <YOUR_STORAGE_ACCOUNT>.dfs.core.windows.net # Storage account name 
-  key: YOUR_STORAGE_KEY # Storage key for WASB, not required for ADLS_GEN2
-  resourceGroup: <RESOUCE_GROUP> # Resource group where ADLS Gen2 exist
-  managedIdentityName: <IDENTITY_NAME> # Managed Identity Name
-  mangedIdentityResourceGroup: <IDENTITY_RESOURCE_GREOUP> # Resource Group name where the Managed Identity exist
+  type: WASB or ADLS_GEN2 # Default is WASB, we can use ADLS_GEN2 as well
+  endpoint: <YOUR_STORAGE_ACCOUNT>.blob.core.windows.net or <YOUR_STORAGE_ACCOUNT>.dfs.core.windows.net # Storage account name
+  key: YOUR_STORAGE_KEY #[WASB] Storage key for WASB, not required for ADLS_GEN2
+  resourceGroup: <RESOURCE_GROUP> #[ADLS_GEN2] Resource group where ADLS Gen2 exist
+  managedIdentityName: <IDENTITY_NAME> #[ADLS_GEN2] Managed Identity Name for ADLS
+  mangedIdentityResourceGroup: <IDENTITY_RESOURCE_GROUP> #[ADLS_GEN2] Resource Group name where the Managed Identity exist for ADLS
 
 
 network:
@@ -69,13 +69,13 @@ network:
   subnetName: SUBNET_NAME # Subnet name to be used within a VNet 
   create: false # If true, creates new one (resourceGroup here is not required), else configures the existing VNet and Subnet from the resourceGroup mentioned
 
-security:  # This has to be configured only for Secure(ESP Enabled) clusters, for standard clusters this is not required
+security:  #[Optional] This has to be configured only for Secure(ESP Enabled) clusters, for standard clusters this is not required
   ldapUrl: YOUR_LDAP_URL # LDAP URL of the AAD-DS
   domainUserName: YOUR_DOMAIN_USERNAME # eg : foobar@securehadoop.onmicrosoft.com
   aaddsDnsDomainName: YOUR_AADDS_DNS_DOMAIN_NAME # eg: securehadoop.onmicrosoft.com
   clusterAccessGroup: YOUR_ACCESS_GROUP # eg: clusterusers
-  aaddsResourceId: YOUR_AADDS_RESOURCE_ID # eg: /subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP/providers/Microsoft.AAD/domainServices/YOUR_AADDS_DNS_DOMAIN_NAME
-  msiResourceId: YOUR_MANAEGED_IDENTITY # /subscriptions/YOUR_SUBSCRIPTION/resourceGroups/YOUR_RESOURCE_GROUP/providers/Microsoft.ManagedIdentity/userAssignedIdentities/YOUR_IDENTITY
+  aaddsResourceId: YOUR_AADDS_RESOURCE_ID # eg: /subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/<YOUR_RESOURCE_GROUP>/providers/Microsoft.AAD/domainServices/<YOUR_AADDS_DNS_DOMAIN_NAME>
+  msiResourceId: YOUR_MANAGED_IDENTITY # /subscriptions/<YOUR_SUBSCRIPTION>/resourceGroups/<YOUR_RESOURCE_GROUP>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<YOUR_IDENTITY>
 ```
 
 
