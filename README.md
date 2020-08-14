@@ -35,54 +35,53 @@ User can set configs in a YAML file (as shown below) and pass it to the tool. Th
 ```yml
 type: SPARK_AND_LLAP # [Optional], values can be either SPARK_ONLY or LLAP_ONLY Default is SPARK_AND_LLAP
 clusterNamePrefix: Foo # This prefix is used while creating the cluster name. Only first three chars are used as prefix from this string
-resourceGroup: foobar-rg # Resource group where the cluster needs to be created
-region: eastus2 # Region name where the cluster needs to be created, should be in small case without space
+resourceGroup: <RESOURCE_GROUP> # Resource group where the cluster needs to be created
+region: <REGION> # Region name where the cluster needs to be created, should be in small case without space. Eg: eastus2
 headNodeVMSize: STANDARD_D13_V2 # Any Standard VM Size supported for Head Nodes in HDInsight, https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-supported-node-configuration
 workerNodeVMSize: STANDARD_D13_V2 # Any Standard VM Size supported for Worker Nodes in HDInsight, https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-supported-node-configuration
 workerNodeSize: 3 # Size of worker nodes
-subscription: YOUR_SUBSCRIPTION # Subscription ID
+subscription: <YOUR_SUBSCRIPTION> # Subscription ID
 
 activeDirectory:
   azureEnv: AZURE # Azure Env either AZURE_CHINA/AZURE_GERMANY/AZURE_US_GOVERNMENT , default AZURE
-  clientId: YOUR_CLIENT_ID # Client ID of the service principal
-  tenantId: YOUR_TENANT_ID # Tenant ID of the service principal
-  clientSecret: YOUR_CLIENT_SECRET # Client Secret for the service principal
+  clientId: <YOUR_CLIENT_ID> # Client ID of the service principal
+  tenantId: <YOUR_TENANT_ID> # Tenant ID of the service principal
+  clientSecret: <YOUR_CLIENT_SECRET> # Client Secret for the service principal
 
 clusterCredentials:
-  clusterLoginUsername: YOU_USER_NAME # Ambari username
-  clusterLoginPassword: YOUR_PASSWORD # Ambari password
-  sshUsername: SSH_USER # SSH username
-  sshPassword: SSH_PASSWORD # SSH password
+  clusterLoginUsername: <YOU_USER_NAME> # Ambari username
+  clusterLoginPassword: <YOUR_PASSWORD> # Ambari password
+  sshUsername: <SSH_USER> # SSH username
+  sshPassword: <SSH_PASSWORD> # SSH password
 
 storage:
   type: WASB or ADLS_GEN2 # Default is WASB, we can use ADLS_GEN2 as well
   endpoint: <YOUR_STORAGE_ACCOUNT>.blob.core.windows.net or <YOUR_STORAGE_ACCOUNT>.dfs.core.windows.net # Storage account name
-  key: YOUR_STORAGE_KEY #[WASB] Storage key for WASB, not required for ADLS_GEN2
-  resourceGroup: <RESOURCE_GROUP> #[ADLS_GEN2] Resource group where ADLS Gen2 exist
-  managedIdentityName: <IDENTITY_NAME> #[ADLS_GEN2] Managed Identity Name for ADLS
-  mangedIdentityResourceGroup: <IDENTITY_RESOURCE_GROUP> #[ADLS_GEN2] Resource Group name where the Managed Identity exist for ADLS
-
+  key: <YOUR_STORAGE_KEY> #[WASB] Storage key for WASB, not required for ADLS_GEN2
+  resourceGroup: <RESOURCE_GROUP> #[ADLS_GEN2] Resource group where ADLS_GEN2 exist
+  managedIdentityName: <IDENTITY_NAME> #[ADLS_GEN2] Managed Identity Name for ADLS_GEN2
+  mangedIdentityResourceGroup: <IDENTITY_RESOURCE_GROUP> #[ADLS_GEN2] Resource Group name where the Managed Identity exist for ADLS_GEN2
 
 network:
-  vnetName: YOUR_VNET # VNet Name to be used
-  resourceGroup: VNET_RESOURCE_GROUP # Resource group in which the VNet exists
-  subnetName: SUBNET_NAME # Subnet name to be used within a VNet 
+  vnetName: <YOUR_VNET> # VNet Name to be used
+  resourceGroup: <VNET_RESOURCE_GROUP> # Resource group in which the VNet exists
+  subnetName: <SUBNET_NAME> # Subnet name to be used within a VNet
   create: false # If true, creates new one (resourceGroup here is not required), else configures the existing VNet and Subnet from the resourceGroup mentioned
 
 security:  #[Optional] This has to be configured only for Secure(ESP Enabled) clusters, for standard clusters this is not required
-  ldapUrl: YOUR_LDAP_URL # LDAP URL of the AAD-DS
-  domainUserName: YOUR_DOMAIN_USERNAME # eg : foobar@securehadoop.onmicrosoft.com
-  aaddsDnsDomainName: YOUR_AADDS_DNS_DOMAIN_NAME # eg: securehadoop.onmicrosoft.com
-  clusterAccessGroup: YOUR_ACCESS_GROUP # eg: clusterusers
-  aaddsResourceId: YOUR_AADDS_RESOURCE_ID # eg: /subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/<YOUR_RESOURCE_GROUP>/providers/Microsoft.AAD/domainServices/<YOUR_AADDS_DNS_DOMAIN_NAME>
-  msiResourceId: YOUR_MANAGED_IDENTITY # /subscriptions/<YOUR_SUBSCRIPTION>/resourceGroups/<YOUR_RESOURCE_GROUP>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<YOUR_IDENTITY>
+  ldapUrl: <YOUR_LDAP_URL> # LDAP URL of the AAD-DS
+  domainUserName: <YOUR_DOMAIN_USERNAME> # eg : foobar@securehadoop.onmicrosoft.com
+  aaddsDnsDomainName: <YOUR_AADDS_DNS_DOMAIN_NAME> # eg: securehadoop.onmicrosoft.com
+  clusterAccessGroup: <YOUR_ACCESS_GROUP> # eg: clusterusers
+  aaddsResourceId: <YOUR_AADDS_RESOURCE_ID> # eg: /subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/<YOUR_RESOURCE_GROUP>/providers/Microsoft.AAD/domainServices/<YOUR_AADDS_DNS_DOMAIN_NAME>
+  msiResourceId: <YOUR_MANAGED_IDENTITY> # /subscriptions/<YOUR_SUBSCRIPTION>/resourceGroups/<YOUR_RESOURCE_GROUP>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<YOUR_IDENTITY>
 ```
 
 
 ### Running the tool
 - Clone the repository
     ```bash
-    git clone https://github.com/Sushil-K-S/HWC-Cluster-Creator-Tool.git
+    git clone https://github.com/Azure-Samples/HWC-Cluster-Creator-Tool.git
     ```
 - Build the repository
     ```bash
@@ -96,9 +95,9 @@ security:  #[Optional] This has to be configured only for Secure(ESP Enabled) cl
 
 ## Verify the HWC Cluster Setup
 
-Once the tool creates the cluster, we can verify wether the Hive Warehouse Connection from HDI Spark to HDI LLAP Cluster is working properly
+Once the tool create the clusters, then follow below steps to verify if HDI Spark cluster can connect with HDI LLAP cluster and if HWC works properly.
 - Use [ssh command](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-hadoop-linux-use-ssh-unix) to connect to your Apache Spark cluster. Edit the command below by replacing CLUSTERNAME with the name of your cluster, and then enter the command.<br/> 
-<strong>Note</strong>: If the custom VNet is created from this tool, then we need to manually add the inbound rule inside the NSG for ssh i.e allow connection to port 22 inside Virtual Network from any source. By default this rule is not added.
+<strong>Note</strong>: If the custom VNet is created from this tool, then we need to manually add an inbound rule inside the NSG for ssh i.e allow connection to port 22 inside Virtual Network from any source. By default this rule is not added.
     ```cmd
     ssh sshuser@CLUSTERNAME-ssh.azurehdinsight.net
     ```
@@ -145,10 +144,9 @@ Once the tool creates the cluster, we can verify wether the Hive Warehouse Conne
     result.write.format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").option("table", "test_table_2").mode("append").save() 
     val result_2 = hive.executeQuery("select * from test_table_2").first().getLong(0)
     ```
-- Once you are able to test the HWC Connection from HDI Spark to HDI LLAP cluster, you can [refer these steps](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector#configure-spark-cluster-settings) for setting the spark configs inside Ambari instead of passing them everytime we launch the spark-shell command. 
+- Once HWC functionality is verified successfully using above commands, the required configs can be set in spark cluster using Ambari UI [Refer these steps](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector#configure-spark-cluster-settings) to avoid passing it explicitly from spark-shell or any other tools.
+ 
 ## Additional Resources
-
-
 - [Integrate Apache Spark and Apache Hive with Hive Warehouse Connector in Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector)
 - [Apache Spark operations supported by Hive Warehouse Connector in Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector-operations)
 - [Integrate Apache Zeppelin with Hive Warehouse Connector in Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector-zeppelin)

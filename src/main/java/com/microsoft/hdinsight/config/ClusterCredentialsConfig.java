@@ -1,7 +1,7 @@
 package com.microsoft.hdinsight.config;
 
 /**
- * HDI Custer credentials for Amabri and SSH Login.
+ * HDI Cluster credentials for Ambari and SSH Login.
  */
 public class ClusterCredentialsConfig {
   private String clusterLoginUsername;
