@@ -1,18 +1,18 @@
-# Hive Warehouse Connector(HWC) Cluster Creator Tool
+# HDInsight Cluster Creation Tool for Hive Warehouse Connector (HWC)
 
 ![N|Solid](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/media/apache-hive-warehouse-connector/hive-warehouse-connector-architecture.png)
 
-This tool tries to spin up a HWC Cluster on Azure HDInsight, with very minimal steps from scratch.
+This tool helps to spin-up HWC enabled Azure HDInsight clusters on the given customer subscription, storage account and/or custom VNet, with minimal manual steps.
 
 ## Features
 
 This tool provides the following features:
 * Creates both HDI Spark and HDI LLAP Clusters under the same VNet and allows required Health and Management Inbound Rules.(Does not allow ssh access inside the inbound rule by Default). 
-*Creates only Spark Cluster for a given VNet and Storage account if the LLAP cluster is already created and vice versa.
-* Supports  WASB and ADLS_GEN2 storage types, However the stroage account should be created before running this tool i.e this tool does not create a new storage account if it does not exist.
-* Supports creation of secure HWC Clusters i.e clusters with Enterprise Security Pack.
-* Custom VNet is configured with minimal Inbound Rules, however if the VNet is already present then it can reused.
-* This Tool expects Active Directory Credentials for creating the HDI cluster.
+* Creates only Spark Cluster for a given VNet and Storage account if the LLAP cluster is already created and vice versa.
+* Supports  WASB and ADLS_GEN2 storage types. However, user should input an existing storage account before running this tool i.e this tool does not create a new storage account if it does not exist.
+* Supports creation of secure HDInsight Clusters i.e clusters with Enterprise Security Pack.
+* Custom VNet is configured with minimal Inbound Rules, however if the VNet is already present it can be reused.
+* This tool requires Azure Active Directory (AAD) credentials for creating the HDI clusters.
 
 
 ## Getting Started
@@ -30,13 +30,10 @@ This tool provides the following features:
 
 ### Configuring the Tool
 
-We use a YAML file to configure this Tool in order to create the Spark and LLAP HDI Cluster's as part of Hive Warehouse Connector in the same VNet.
-
- - The below YAML config file should be passed to this tool inorder to initiate the HWC cluster creation.
- - The below configs shows all the configuration available for running this tool. You can also refer the conf folder inside this repo which has templates for standard and secure cluster configs.
+User can set configs in a YAML file (as shown below) and pass it to the tool. The below list covers all the configurations supported by this tool. Additionally, the conf folder in this repo has templates for standard and secure cluster config files
  
 ```yml
-type: SPARK_AND_LLAP # Optional, values can be either SPARK_ONLY or LLAP_ONLY. Default is SPARK_AND_LLAP
+type: SPARK_AND_LLAP # [Optional], values can be either SPARK_ONLY or LLAP_ONLY. Default is SPARK_AND_LLAP
 clusterNamePrefix: Foo # This prefix is used while creating the cluster name. Only first three chars are used as prefix from this string.
 resourceGroup: foobar-rg # Resource group where the cluster needs to be created
 region: eastus2 # Region name where the cluster needs to be created, should be in smallcase without space 
