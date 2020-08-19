@@ -33,7 +33,7 @@ This tool provides the following features:
 User can set configs in a YAML file (as shown below) and pass it to the tool. The below list covers all the configurations supported by this tool. Additionally, the conf folder in this repo has templates for standard and secure cluster config files
  
 ```yml
-type: SPARK_AND_LLAP # [Optional], values can be either SPARK_ONLY or LLAP_ONLY Default is SPARK_AND_LLAP
+type: SPARK_AND_LLAP # Values can be either SPARK_AND_LLAP , SPARK_ONLY or LLAP_ONLY Default is SPARK_AND_LLAP. For example, if the user has an existing LLAP cluster, they can use this Tool to create Spark Cluster by specifying the type as SPARK_ONLY and configure the network with the existing VNet of the LLAP Cluster by setting create field to false.
 clusterNamePrefix: Foo # This prefix is used while creating the cluster name. Only first three chars are used as prefix from this string
 resourceGroup: <RESOURCE_GROUP> # Resource group where the cluster needs to be created
 region: <REGION> # Region name where the cluster needs to be created, should be in small case without space. Eg: eastus2
@@ -55,12 +55,12 @@ clusterCredentials:
   sshPassword: <SSH_PASSWORD> # SSH password
 
 storage:
-  type: WASB or ADLS_GEN2 # Default is WASB, we can use ADLS_GEN2 as well
-  endpoint: <YOUR_STORAGE_ACCOUNT>.blob.core.windows.net or <YOUR_STORAGE_ACCOUNT>.dfs.core.windows.net # Storage account name
-  key: <YOUR_STORAGE_KEY> #[WASB] Storage key for WASB, not required for ADLS_GEN2
-  resourceGroup: <RESOURCE_GROUP> #[ADLS_GEN2] Resource group where ADLS_GEN2 exist
-  managedIdentityName: <IDENTITY_NAME> #[ADLS_GEN2] Managed Identity Name for ADLS_GEN2
-  mangedIdentityResourceGroup: <IDENTITY_RESOURCE_GROUP> #[ADLS_GEN2] Resource Group name where the Managed Identity exist for ADLS_GEN2
+  type: WASB # Default is WASB, we can use ADLS_GEN2 as well
+  endpoint: <YOUR_STORAGE_ACCOUNT>.blob.core.windows.net # For WASB <YOUR_STORAGE_ACCOUNT>.blob.core.windows.net and for ADLS_GEN2 <YOUR_STORAGE_ACCOUNT>.dfs.core.windows.net
+  key: <YOUR_STORAGE_KEY> #[Required for WASB] Storage key for WASB
+  resourceGroup: <RESOURCE_GROUP> #[Required for ADLS_GEN2] Resource group where ADLS_GEN2 exist
+  managedIdentityName: <IDENTITY_NAME> #[Required for ADLS_GEN2] Managed Identity Name for ADLS_GEN2
+  mangedIdentityResourceGroup: <IDENTITY_RESOURCE_GROUP> #[Required for ADLS_GEN2] Resource Group name where the Managed Identity exist for ADLS_GEN2
 
 network:
   vnetName: <YOUR_VNET> # VNet Name to be used

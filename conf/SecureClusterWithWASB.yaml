@@ -1,5 +1,5 @@
-type: SPARK_AND_LLAP # [Optional], values can be either SPARK_ONLY or LLAP_ONLY Default is SPARK_AND_LLAP
-clusterNamePrefix: Foo # This prefix is used while creating the cluster name. Only first three chars are used as prefix from this string
+type: SPARK_AND_LLAP # Values can be either SPARK_AND_LLAP , SPARK_ONLY or LLAP_ONLY Default is SPARK_AND_LLAP. For example, if the user has an existing LLAP cluster, they can use this Tool to create Spark Cluster by specifying the type as SPARK_ONLY and configure the network with the existing VNet of the LLAP Cluster by setting create field to false
+clusterNamePrefix: Foo # This prefix is used while creating the cluster name. Only first three chars are used as prefix from this string and suffixed with -spark or -llap within the tool. Example, Foo-spark / Foo-llap
 resourceGroup: <RESOURCE_GROUP> # Resource group where the cluster needs to be created
 region: <REGION> # Region name where the cluster needs to be created, should be in small case without space. Eg: eastus2
 headNodeVMSize: STANDARD_D13_V2 # Any Standard VM Size supported for Head Nodes in HDInsight, https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-supported-node-configuration
@@ -23,7 +23,6 @@ storage:
   type: WASB
   endpoint: <YOUR_STORAGE_ACCOUNT>.blob.core.windows.net # Storage account name
   key: <YOUR_STORAGE_KEY> # Storage key for WASB
-
 
 network:
   vnetName: <YOUR_VNET> # VNet Name to be used
