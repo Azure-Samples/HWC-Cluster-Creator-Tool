@@ -94,59 +94,8 @@ security:  #[Optional] This has to be configured only for Secure(ESP Enabled) cl
     ```
 
 ## Verify the HWC Cluster Setup
-
-Once the tool create the clusters, then follow below steps to verify if HDI Spark cluster can connect with HDI LLAP cluster and if HWC works properly.
-- Use [ssh command](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-hadoop-linux-use-ssh-unix) to connect to your Apache Spark cluster. Edit the command below by replacing CLUSTERNAME with the name of your cluster, and then enter the command.<br/> 
-<strong>Note</strong>: If the custom VNet is created from this tool, then we need to manually add an inbound rule inside the NSG for ssh i.e allow connection to port 22 inside Virtual Network from any source. By default this rule is not added.
-    ```cmd
-    ssh sshuser@CLUSTERNAME-ssh.azurehdinsight.net
-    ```
-- For Secure Clusters, use kinit before starting the spark-shell or spark-submit. Replace USERNAME with the name of a domain account with permissions to access the cluster, then execute the following command:
-    ```bash
-    kinit USERNAME
-    ```
-- From your ssh session, execute the following command to note the hive-warehouse-connector-assembly version:
-    ```bash
-    ls /usr/hdp/current/hive_warehouse_connector
-    ```
-
-- Edit the code below with the hive-warehouse-connector-assembly version identified above. Then execute the command to start the spark shell:
-    ```bash
-    spark-shell --master yarn \
-    --jars /usr/hdp/current/hive_warehouse_connector/hive-warehouse-connector-assembly-<STACK_VERSION>.jar \
-    --conf spark.security.credentials.hiveserver2.enabled=false \
-    --conf spark.hadoop.hive.llap.daemon.service.hosts=@llap0 \
-    --conf spark.sql.hive.hiveserver2.jdbc.url=jdbc:hive2://<LLAPCLUSTERNAME>.azurehdinsight.net:443/;user=admin;password=PWD;ssl=true;transportMode=http;httpPath=/hive2 \
-    --conf spark.datasource.hive.warehouse.load.staging.dir=<STORAGE_PATH> \
-    --conf spark.datasource.hive.warehouse.metastoreUri=thrift://<HEADNODE-0 HOSTNAME of LLAP Cluster>:9083,thrift://<HEADNODE-1 HOSTNAME of LLAP Cluster>:9083 \
-    --conf spark.hadoop.hive.zookeeper.quorum='<ZOOKEEPER_QUORUM>'
-    ```
-    - <strong>STORAGE_PATH</strong> :
-        1. <strong>For WASB</strong> wasbs://<FIRST_3_CHARS_OF_CLUSTER_NAME_PREFIX>-interactivehive@<STORAGE_ACCOUNT_NAME>.blob.core.windows.net/tmp
-        2. <strong>For ADLS2</strong> abfs://<FIRST_3_CHARS_OF_CLUSTER_NAME_PREFIX>-interactivehive@<STORAGE_ACCOUNT_NAME>.dfs.core.windows.net/tmp/ 
-    - <strong>ZOOKEEPER_QUORUM</strong> :
-         \<ZK-HOSTNAME-OF-LLAP-CLUSTER-1>:2181,\<ZK-HOSTNAME-OF-LLAP-CLUSTER-2>:2181,\<ZK-HOSTNAME-OF-LLAP-CLUSTER-3>:2181
-- Test read from Hive to Spark. The output of "result.first().getLong(1)" should be 2 if everything worked properly. 
-    ```scala
-    import com.hortonworks.hwc.HiveWarehouseSession 
-    import com.hortonworks.hwc.HiveWarehouseSession._ 
-    val hive = HiveWarehouseSession.session(spark).build() 
-    hive.createDatabase("hwc_test", false) 
-    hive.setDatabase("hwc_test") 
-    hive.createTable("test_table").column("fst", "bigint").column("snd", "bigint").create() 
-    hive.executeUpdate("insert into table test_table values (1, 2)") 
-    val result = hive.executeQuery("select * from test_table")
-    result.first().getLong(1)
-    ```
-- Test write from Spark to Hive (assuming the previous step was executed in the same session). The variable "result_2" should get 1 if everything worked properly. 
-    ```scala
-    hive.createTable("test_table_2").column("fst", "bigint").column("snd", "bigint").create() 
-    result.write.format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").option("table", "test_table_2").mode("append").save() 
-    val result_2 = hive.executeQuery("select * from test_table_2").first().getLong(0)
-    ```
-- Once HWC functionality is verified successfully using above commands, the required configs can be set in spark cluster using Ambari UI [Refer these steps](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector#configure-spark-cluster-settings) to avoid passing it explicitly from spark-shell or any other tools.
+- [Apache Spark operations supported by Hive Warehouse Connector in Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector-operations)
  
 ## Additional Resources
 - [Integrate Apache Spark and Apache Hive with Hive Warehouse Connector in Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector)
-- [Apache Spark operations supported by Hive Warehouse Connector in Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector-operations)
 - [Integrate Apache Zeppelin with Hive Warehouse Connector in Azure HDInsight](https://docs.microsoft.com/en-us/azure/hdinsight/interactive-query/apache-hive-warehouse-connector-zeppelin)
