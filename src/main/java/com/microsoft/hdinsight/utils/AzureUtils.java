@@ -248,7 +248,7 @@ public class AzureUtils {
 
     return new OsProfile()
       .withLinuxOperatingSystemProfile(
-        new LinuxOperatingSystemProfile().withSshProfile(profile)
+        new LinuxOperatingSystemProfile().withSshProfile(profile).withUsername(sshWithKeys.getSshUsername())
       );
   }
 

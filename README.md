@@ -55,6 +55,7 @@ clusterCredentials:
     # Use either keys or password for sshCredentials.
     type: keys
     publicKeypaths: [<SSH_KEYS1>, <SSH_KEY2>] # Public SSH Key paths
+    sshUsername: <SSH_USER> # SSH username
     # type: password
     # sshUsername: <SSH_USER> # SSH username
     # sshPassword: <SSH_PASSWORD> # SSH password
