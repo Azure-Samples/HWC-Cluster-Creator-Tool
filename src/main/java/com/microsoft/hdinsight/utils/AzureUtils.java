@@ -40,6 +40,7 @@ import com.microsoft.rest.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -229,6 +230,12 @@ public class AzureUtils {
   private static OsProfile addSSHWithKeysCredentials(SSHWithKeys sshWithKeys) {
     List<SshPublicKey> sshPublicKeys = new ArrayList<>();
     for (String path : sshWithKeys.getPublicKeypaths()) {
+      File file = new File(path);
+      if (!file.exists()) {
+        throw new RuntimeException("Ssh PublicKey file '" + path + "' does not exists");
+      } else if (!file.isFile()) {
+        throw new RuntimeException("Ssh PublicKey file '" + path + "' is a directory. Please specify a file instead.");
+      }
       final StringBuilder contentBuilder = new StringBuilder();
       try (Stream<String> stream = Files.lines( Paths.get(path), StandardCharsets.UTF_8)) {
         stream.forEach(s -> contentBuilder.append(s));
