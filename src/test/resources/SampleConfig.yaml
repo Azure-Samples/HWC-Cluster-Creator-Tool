@@ -6,6 +6,7 @@ headNodeVMSize: STANDARD_D13_V2
 workerNodeVMSize: STANDARD_D13_V2
 workerNodeSize: 3
 subscription: 00000000-0000-0000-0000-000000000000
+enableSpark3: false
 
 activeDirectory:
   azureEnv: AZURE

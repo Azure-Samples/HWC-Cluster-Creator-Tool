@@ -6,6 +6,7 @@ headNodeVMSize: STANDARD_D13_V2 # Any Standard VM Size supported for Head Nodes 
 workerNodeVMSize: STANDARD_D13_V2 # Any Standard VM Size supported for Worker Nodes in HDInsight, https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-supported-node-configuration
 workerNodeSize: 3 # Size of worker nodes
 subscription: <YOUR_SUBSCRIPTION> # Subscription ID
+enableSpark3: false #  Optional, by default Spark2.4 cluster is created
 
 activeDirectory:
   azureEnv: AZURE # Azure Env either AZURE_CHINA/AZURE_GERMANY/AZURE_US_GOVERNMENT , default AZURE

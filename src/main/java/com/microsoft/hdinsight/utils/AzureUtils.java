@@ -118,6 +118,14 @@ public class AzureUtils {
         .create();
   }
 
+  private static Map<String, String> getComponenVersion(HWCClusterConfig clusterConfig) {
+    if (clusterConfig.isEnableSpark3()) {
+      return ImmutableMap.of("spark", "3.0");
+    }
+
+    return ImmutableMap.of();
+  }
+
   private static ClusterCreateParametersExtended getClusterCreateParameters(
       HWCClusterConfig clusterConfig, Azure azure, ClusterType clusterType) {
     ClusterCreateParametersExtended createParametersExtended = new ClusterCreateParametersExtended()
@@ -128,6 +136,7 @@ public class AzureUtils {
             .withTier(Tier.STANDARD)
             .withClusterDefinition(new ClusterDefinition()
                 .withKind(clusterType.getType())
+                .withComponentVersion(getComponenVersion(clusterConfig))
                 .withConfigurations(ImmutableMap.of(
                     "gateway", ImmutableMap.of(
                         "restAuthCredential.isEnabled", "true",
