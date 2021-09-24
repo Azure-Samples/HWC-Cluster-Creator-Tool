@@ -39,17 +39,18 @@ public class HWCClusterCreator {
     final Azure azure = AzureUtils.authenticate(clusterConfig.getActiveDirectory(), clusterConfig.getSubscription());
     final HDInsightManager manager = HDInsightManager.authenticate(AzureUtils.getAppTokenCred(
         clusterConfig.getActiveDirectory()), clusterConfig.getSubscription());
-    final ExecutorService executor = Executors.newFixedThreadPool(2);
-    final CountDownLatch countDownLatch = new CountDownLatch(2);
-    try {
-      switch (clusterConfig.getType()) {
-        case LLAP_ONLY:
-          AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.LLAP);
-          break;
-        case SPARK_ONLY:
-          AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.SPARK);
-          break;
-        default:
+
+    switch (clusterConfig.getType()) {
+      case LLAP_ONLY:
+        AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.LLAP);
+        break;
+      case SPARK_ONLY:
+        AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.SPARK);
+        break;
+      default:
+        final ExecutorService executor = Executors.newFixedThreadPool(2);
+        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        try {
           //Create both Spark and LLAP cluster
           executor.submit(new Runnable() {
             public void run() {
@@ -63,10 +64,10 @@ public class HWCClusterCreator {
               countDownLatch.countDown();
             }
           });
-      }
-    } finally {
-      countDownLatch.await();
-      executor.shutdownNow();
+        } finally {
+          countDownLatch.await();
+          executor.shutdownNow();
+        }
     }
   }
 }
