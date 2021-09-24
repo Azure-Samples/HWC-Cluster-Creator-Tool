@@ -15,7 +15,7 @@ activeDirectory:
   clientSecret: <YOUR_CLIENT_SECRET> # Client Secret for the service principal
 
 clusterCredentials:
-  clusterLoginUsername: <YOUR_USER_NAME> # Ambari username
+  clusterLoginUsername: <YOU_USER_NAME> # Ambari username
   clusterLoginPassword: <YOUR_PASSWORD> # Ambari password
   sshCredentials:
     # Use either keys or password for sshCredentials.
