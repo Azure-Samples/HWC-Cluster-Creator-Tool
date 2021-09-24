@@ -20,6 +20,7 @@ public class HWCClusterConfig {
   private StorageConfig storage;
   private NetworkConfig network;
   private SecurityConfig security;
+  private boolean enableSpark3 = false;
 
   public CreateType getType() {
     return type;
@@ -123,5 +124,13 @@ public class HWCClusterConfig {
 
   public void setSecurity(SecurityConfig security) {
     this.security = security;
+  }
+
+  public boolean isEnableSpark3() {
+    return enableSpark3;
+  }
+
+  public void setEnableSpark3(boolean enableSpark3) {
+    this.enableSpark3 = enableSpark3;
   }
 }
