@@ -18,6 +18,8 @@ import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.OsProfile;
 import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.ResourceIdentityType;
 import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.Role;
 import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.SecurityProfile;
+import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.SshProfile;
+import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.SshPublicKey;
 import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.StorageAccount;
 import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.StorageProfile;
 import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.Tier;
@@ -30,16 +32,28 @@ import com.microsoft.hdinsight.config.ActiveDirectoryConfig;
 import com.microsoft.hdinsight.config.ClusterType;
 import com.microsoft.hdinsight.config.HWCClusterConfig;
 import com.microsoft.hdinsight.config.NetworkConfig;
+import com.microsoft.hdinsight.config.SSHWithKeys;
+import com.microsoft.hdinsight.config.SSHWithPassword;
 import com.microsoft.hdinsight.config.StorageConfig;
 import com.microsoft.hdinsight.config.StorageType;
 import com.microsoft.rest.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Util class hosting a set of helper methods accessing
@@ -208,12 +222,46 @@ public class AzureUtils {
 
   private static OsProfile addSSHCredentials(HWCClusterConfig clusterConfig) {
     LOG.info("Setting up SSH credentials...");
+    if (clusterConfig.getClusterCredentials().getSshCredentials() instanceof SSHWithPassword) {
+      return addSSHWithPasswordCredentials((SSHWithPassword) clusterConfig.getClusterCredentials().getSshCredentials());
+    } else {
+      return addSSHWithKeysCredentials((SSHWithKeys) clusterConfig.getClusterCredentials().getSshCredentials());
+    }
+  }
+
+  private static OsProfile addSSHWithKeysCredentials(SSHWithKeys sshWithKeys) {
+    List<SshPublicKey> sshPublicKeys = new ArrayList<>();
+    for (String path : sshWithKeys.getPublicKeypaths()) {
+      final StringBuilder contentBuilder = new StringBuilder();
+      try (Stream<String> stream = Files.lines( Paths.get(path), StandardCharsets.UTF_8)) {
+        stream.forEach(s -> contentBuilder.append(s));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+
+
+      SshPublicKey sshPublicKey = new SshPublicKey();
+      sshPublicKey.withCertificateData(contentBuilder.toString());
+      sshPublicKeys.add(sshPublicKey);
+      contentBuilder.setLength(0);
+    }
+
+    SshProfile profile = new SshProfile();
+    profile.withPublicKeys(sshPublicKeys);
+
     return new OsProfile()
-        .withLinuxOperatingSystemProfile(
-            new LinuxOperatingSystemProfile()
-                .withUsername(clusterConfig.getClusterCredentials().getSshUsername())
-                .withPassword(clusterConfig.getClusterCredentials().getSshPassword())
-        );
+      .withLinuxOperatingSystemProfile(
+        new LinuxOperatingSystemProfile().withSshProfile(profile)
+      );
+  }
+
+  private static OsProfile addSSHWithPasswordCredentials(SSHWithPassword sshWithPassword) {
+    return new OsProfile()
+      .withLinuxOperatingSystemProfile(
+        new LinuxOperatingSystemProfile()
+                .withUsername(sshWithPassword.getSshUsername())
+                .withPassword(sshWithPassword.getSshPassword())
+      );
   }
 
   private static VirtualNetworkProfile getVirtualNetworkProfile(HWCClusterConfig clusterConfig, Azure azure) {

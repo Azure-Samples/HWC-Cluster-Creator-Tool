@@ -1,11 +1,15 @@
 package com.microsoft.hdinsight;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.microsoft.azure.management.Azure;
 import com.microsoft.azure.management.hdinsight.v2018_06_01_preview.implementation.HDInsightManager;
+import com.microsoft.hdinsight.config.ClusterCredentialsConfig;
 import com.microsoft.hdinsight.config.ClusterType;
 import com.microsoft.hdinsight.config.HWCClusterConfig;
+import com.microsoft.hdinsight.config.SSHWithKeys;
+import com.microsoft.hdinsight.config.SSHWithPassword;
 import com.microsoft.hdinsight.utils.AzureUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +33,7 @@ public class HWCClusterCreator {
 
   public static void main(String[] args) throws IOException, InterruptedException {
     if (args.length < 1) {
-        System.out.println("Usage : jar -jar " +
+        System.out.println("Usage : java -jar " +
             "HWC-ClusterCreator-1.0-SNAPSHOT-jar-with-dependencies.jar " +
             "YOUR_CONFIG.YAML");
         System.exit(1);
