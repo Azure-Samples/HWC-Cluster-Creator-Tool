@@ -29,7 +29,7 @@ public class HWCClusterCreator {
 
   public static void main(String[] args) throws IOException, InterruptedException {
     if (args.length < 1) {
-        System.out.println("Usage : jar -jar " +
+        System.out.println("Usage : java -jar " +
             "HWC-ClusterCreator-1.0-SNAPSHOT-jar-with-dependencies.jar " +
             "YOUR_CONFIG.YAML");
         System.exit(1);
@@ -39,13 +39,12 @@ public class HWCClusterCreator {
     final Azure azure = AzureUtils.authenticate(clusterConfig.getActiveDirectory(), clusterConfig.getSubscription());
     final HDInsightManager manager = HDInsightManager.authenticate(AzureUtils.getAppTokenCred(
         clusterConfig.getActiveDirectory()), clusterConfig.getSubscription());
-
     switch (clusterConfig.getType()) {
       case LLAP_ONLY:
-        AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.LLAP);
+        createHDIClusterInTryCatch(clusterConfig, azure, manager, ClusterType.LLAP);
         break;
       case SPARK_ONLY:
-        AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.SPARK);
+        createHDIClusterInTryCatch(clusterConfig, azure, manager, ClusterType.SPARK);
         break;
       default:
         final ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -54,13 +53,13 @@ public class HWCClusterCreator {
           //Create both Spark and LLAP cluster
           executor.submit(new Runnable() {
             public void run() {
-              AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.LLAP);
+              createHDIClusterInTryCatch(clusterConfig, azure, manager, ClusterType.LLAP);
               countDownLatch.countDown();
             }
           });
           executor.submit(new Runnable() {
             public void run() {
-              AzureUtils.createHDICluster(clusterConfig, azure, manager, ClusterType.SPARK);
+              createHDIClusterInTryCatch(clusterConfig, azure, manager, ClusterType.SPARK);
               countDownLatch.countDown();
             }
           });
@@ -68,6 +67,14 @@ public class HWCClusterCreator {
           countDownLatch.await();
           executor.shutdownNow();
         }
+    }
+  }
+
+  private static void createHDIClusterInTryCatch(HWCClusterConfig clusterConfig, Azure azure, HDInsightManager manager, ClusterType type) {
+    try {
+      AzureUtils.createHDICluster(clusterConfig, azure, manager, type);
+    } catch (Throwable t) {
+      LOG.error("Cluster creation failed", t);
     }
   }
 }

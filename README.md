@@ -51,8 +51,10 @@ activeDirectory:
 clusterCredentials:
   clusterLoginUsername: <YOU_USER_NAME> # Ambari username
   clusterLoginPassword: <YOUR_PASSWORD> # Ambari password
-  sshUsername: <SSH_USER> # SSH username
-  sshPassword: <SSH_PASSWORD> # SSH password
+  sshCredentials:
+    type: keys
+    publicKeypaths: [<SSH_KEYS1>, <SSH_KEY2>] # Public SSH Key paths
+    sshUsername: <SSH_USER> # SSH username
 
 storage:
   type: WASB # Default is WASB, we can use ADLS_GEN2 as well
@@ -77,6 +79,16 @@ security:  #[Optional] This has to be configured only for Secure(ESP Enabled) cl
   msiResourceId: <YOUR_MANAGED_IDENTITY> # /subscriptions/<YOUR_SUBSCRIPTION>/resourceGroups/<YOUR_RESOURCE_GROUP>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<YOUR_IDENTITY>
 ```
 
+ClusterCredentials can be set to use username-password instead of ssh-keys for ssh to cluster like:
+```yml
+clusterCredentials:
+  clusterLoginUsername: <YOU_USER_NAME> # Ambari username
+  clusterLoginPassword: <YOUR_PASSWORD> # Ambari password
+  sshCredentials:
+    type: password
+    sshUsername: <SSH_USER> # SSH username
+    sshPassword: <SSH_PASSWORD> # SSH password
+```
 
 ### Running the tool
 - Clone the repository

@@ -14,11 +14,20 @@ public class HWCClusterCreatorTest {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(new YAMLFactory());
 
   @Test
-  public void testParsingHWCClusterConfigYAML() throws IOException {
+  public void testParsingHWCClusterConfigYAML1() throws IOException {
     ClassLoader classLoader = getClass().getClassLoader();
-    String configPath = "SampleConfig.yaml";
+    String configPath = "SampleConfig1.yaml";
     File file = new File(Objects.requireNonNull(classLoader.getResource(configPath)).getFile());
     OBJECT_MAPPER.readValue(file,
         HWCClusterConfig.class);
+  }
+
+  @Test
+  public void testParsingHWCClusterConfigYAML2() throws IOException {
+    ClassLoader classLoader = getClass().getClassLoader();
+    String configPath = "SampleConfig2.yaml";
+    File file = new File(Objects.requireNonNull(classLoader.getResource(configPath)).getFile());
+    OBJECT_MAPPER.readValue(file,
+      HWCClusterConfig.class);
   }
 }

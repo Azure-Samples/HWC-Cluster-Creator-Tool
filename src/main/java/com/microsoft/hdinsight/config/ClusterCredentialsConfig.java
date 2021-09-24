@@ -6,8 +6,7 @@ package com.microsoft.hdinsight.config;
 public class ClusterCredentialsConfig {
   private String clusterLoginUsername;
   private String clusterLoginPassword;
-  private String sshUsername;
-  private String sshPassword;
+  private SSHCredentials sshCredentials;
 
   public String getClusterLoginUsername() {
     return clusterLoginUsername;
@@ -25,19 +24,11 @@ public class ClusterCredentialsConfig {
     this.clusterLoginPassword = clusterLoginPassword;
   }
 
-  public String getSshUsername() {
-    return sshUsername;
+  public SSHCredentials getSshCredentials() {
+    return sshCredentials;
   }
 
-  public void setSshUsername(String sshUsername) {
-    this.sshUsername = sshUsername;
-  }
-
-  public String getSshPassword() {
-    return sshPassword;
-  }
-
-  public void setSshPassword(String sshPassword) {
-    this.sshPassword = sshPassword;
+  public void setSshCredentials(SSHCredentials sshCredentials) {
+    this.sshCredentials = sshCredentials;
   }
 }
