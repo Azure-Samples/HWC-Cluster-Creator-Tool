@@ -51,8 +51,13 @@ activeDirectory:
 clusterCredentials:
   clusterLoginUsername: <YOU_USER_NAME> # Ambari username
   clusterLoginPassword: <YOUR_PASSWORD> # Ambari password
-  sshUsername: <SSH_USER> # SSH username
-  sshPassword: <SSH_PASSWORD> # SSH password
+  sshCredentials:
+    # Use either keys or password for sshCredentials.
+    type: keys
+    publicKeypaths: [<SSH_KEYS1>, <SSH_KEY2>] # Public SSH Key paths
+    # type: password
+    # sshUsername: <SSH_USER> # SSH username
+    # sshPassword: <SSH_PASSWORD> # SSH password
 
 storage:
   type: WASB # Default is WASB, we can use ADLS_GEN2 as well
