@@ -6,7 +6,6 @@ headNodeVMSize: STANDARD_D13_V2
 workerNodeVMSize: STANDARD_D13_V2
 workerNodeSize: 3
 subscription: 00000000-0000-0000-0000-000000000000
-enableSpark3: false
 
 activeDirectory:
   azureEnv: AZURE
@@ -17,8 +16,10 @@ activeDirectory:
 clusterCredentials:
   clusterLoginUsername: admin
   clusterLoginPassword: Password123!
-  sshUsername: sshuser
-  sshPassword: Password123!
+  sshCredentials:
+    type: keys
+    sshUsername: sshuser
+    publicKeypaths: ["/some/dummy/path1", "/some/dummy/path2", "/some/dummy/path3"]
 
 storage:
   type: WASB
